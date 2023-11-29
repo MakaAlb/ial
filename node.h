@@ -1,3 +1,5 @@
-struct node_t{
-  list_node_t neigbours; 
-};
+#include "c201.h"
+
+typedef struct node_t{
+  List neigbours; 
+} node;
