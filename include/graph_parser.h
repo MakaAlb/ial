@@ -17,7 +17,7 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
-
+#include <stdbool.h>
 
 
 // DEFINES
@@ -66,6 +66,11 @@ typedef struct graph_t {
     node_t *nodes;
 } graph_t;
 
+typedef struct pathset_t {
+    int path_count;
+  graph_t **paths;
+} pathset_t;
+
 
 
 // FUNCTIONS
@@ -110,5 +115,32 @@ void print_graph_nodes(graph_t *graph);
  */
 void free_graph(graph_t *graph);
 
+void free_pathset(pathset_t *pathset);
+
+void print_path(graph_t* path);
+
+/**
+ * @brief finds all Hamiltonian path from start node to end node
+ *
+ * @param graph - graph to be searched
+ * @param start - staring node
+ * @param end - end node
+ *
+ */
+
+pathset_t *find_paths(graph_t *graph, int start, int end);
+
+/**
+ * @brief finds all Hamiltonian path from vertex start to end vertex
+ *
+ * @param graph - graph to be searched
+ * @param start - starting node
+ * @param end - end node
+ * @param path - already searched path, NULL if first level of iteration
+ * @param pathset - if path is found will contain all found paths
+ *
+ */
+void find_paths_from_point(graph_t *graph, int start, int end,
+                           graph_t *path);
 
 #endif //IAL_GRAPH_PARSER_H

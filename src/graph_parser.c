@@ -96,10 +96,19 @@ void print_graph_nodes(graph_t *graph) {
         printf("\tDegree: %d\n", graph->nodes[i].degree);
         printf("\tNeighbours: ");
         for (int j = 0; j < graph->nodes[i].degree; j++) {
-            printf("%d ", graph->nodes[i].neighbours[j]);
+	  printf("%d ", graph->nodes[i].neighbours[j]);
         }
         printf("\n");
     }
+}
+
+void print_path(graph_t *path) {
+  printf("Nodes count: %d\n", path->nodes_count);
+  printf("\t");
+    for (int i = 0; i < path->nodes_count; i++) {
+        printf("%d ", path->nodes[i].id);
+    }
+    printf("\n");
 }
 
 
@@ -117,6 +126,72 @@ char *parse_cmd(int argc, char **argv) {
     return argv[1];
 }
 
+pathset_t *find_paths(graph_t *graph, int start, int end) {
+  pathset_t* pathset = malloc(sizeof(pathset_t));
+  if(pathset == NULL){
+    printf("Malloc failed.\n");
+    exit(EXIT_FAILURE);
+  }
+  pathset->path_count = 0;
+  pathset->paths = NULL;
+  find_paths_from_point(graph, start, end, NULL);
+  return pathset;
+}
+
+void find_paths_from_point(graph_t *graph, int start, int end,
+                           graph_t *path) {
+  //printf("%d\n",start);
+  if(path == NULL){
+    path = malloc(sizeof(graph_t));
+    if(path == NULL){
+      printf("Malloc failed.\n");
+      exit(EXIT_FAILURE);
+    }
+    path->nodes = NULL;
+    path->nodes_count = 0;
+  }
+  //printf("realloc\n");
+  path->nodes = realloc(path->nodes, sizeof(node_t) * (path->nodes_count + 1));
+  if(path->nodes == NULL){
+    printf("Malloc failed.\n");
+    exit(EXIT_FAILURE);
+  }
+  //printf("add to path\n");
+  path->nodes[path->nodes_count] = graph->nodes[start];
+  path->nodes_count++;
+
+  if(start == end){
+    print_path(path);
+  }
+  else{
+    for(int i = 0; i < graph->nodes[start].degree; i++){
+      //printf("next: %d\n",graph->nodes[start].neighbours[i]);
+      bool explore = true;
+      for(int j = 0; j < path->nodes_count; j++){
+	//printf("path node %d: %d\n",j,path->nodes[j].id);
+	if(graph->nodes[start].neighbours[i] == path->nodes[j].id){
+	  explore = false;
+	  break;
+	}
+      }
+      if(explore){
+	graph_t* path2 = malloc(sizeof(graph_t));
+	if(path2 == NULL){
+	  printf("Malloc failed.\n");
+	  exit(EXIT_FAILURE);
+	}
+	path2->nodes = malloc( sizeof(node_t) * path->nodes_count);
+	if(path2->nodes == NULL){
+	  printf("Malloc failed.\n");
+	  exit(EXIT_FAILURE);
+	}
+	memcpy(path2->nodes, path->nodes, sizeof(node_t) * path->nodes_count);
+	path2->nodes_count = path->nodes_count;
+	find_paths_from_point(graph, graph->nodes[start].neighbours[i], end, path2);
+      }
+    }
+  }
+}
 
 int main(int argc, char **argv) {
     // declarations
@@ -132,6 +207,11 @@ int main(int argc, char **argv) {
     graph = parse_input(filename);
 
     print_graph_nodes(graph);
+
+    pathset_t* ps = find_paths(graph, 1, 2);
+    //for(int i =0;i<ps->path_count;i++)print_graph_nodes(ps->paths);
+    
+    free(ps);
 
     // free memory
     free_graph(graph);
