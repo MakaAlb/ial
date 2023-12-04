@@ -1,1 +1,3 @@
 .idea
+*.o
+hamiltonian_algorithm

@@ -29,15 +29,16 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 // max filename length
-#define MAX_FILENAME 100
+#define MAX_BUF 100
 
 // max nodes in graph
 #define MAX_NODES 100
 
 // help message
-#define HELP "\nUSAGE: ./hamiltonian_algo filename\n\n" \
-                "\tfilename - name of the file with the graph\n\n"
-
+#define HELP "\nUSAGE: ./hamiltonian_algo -f filename -s start_node_id -e end_node_id\n\n" \
+                "\tfilename\tName of the file with the graph.\n"                           \
+                "\tstart_node_id\tID of the starting node.\n"                              \
+                "\tend_node_id\tID of the end node.\n\n"
 
 
 // STRUCTURES
@@ -64,6 +65,8 @@ typedef struct node_t {
 typedef struct graph_t {
     int nodes_count;
     node_t *nodes;
+    long start_node_id;
+    long end_node_id;
 } graph_t;
 
 typedef struct pathset_t {
@@ -90,16 +93,15 @@ void error_exit(char *message);
  *
  * @return filename - name of the file with the graph
  */
-char *parse_cmd(int argc, char **argv);
+char *parse_cmd(int argc, char **argv, graph_t *graph);
 
 /**
  * @brief Parses the input file and creates a graph
  *
+ * @param graph - graph structure to be filled
  * @param filename - name of the file with the graph
- *
- * @return graph - graph created from the input file
  */
-graph_t *parse_input(char *filename);
+void parse_input(graph_t *graph, char *filename);
 
 /**
  * @brief Prints nodes of the graph with their information
@@ -128,7 +130,7 @@ void print_path(graph_t* path);
  *
  */
 
-pathset_t *find_paths(graph_t *graph, int start, int end);
+pathset_t *find_paths(graph_t *graph, long start, long end);
 
 /**
  * @brief finds all Hamiltonian path from vertex start to end vertex
@@ -140,7 +142,7 @@ pathset_t *find_paths(graph_t *graph, int start, int end);
  * @param pathset - if path is found will contain all found paths
  *
  */
-void find_paths_from_point(graph_t *graph, int start, int end,
+void find_paths_from_point(graph_t *graph, long start, long end,
                            graph_t *path);
 
 #endif //IAL_GRAPH_PARSER_H
