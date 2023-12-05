@@ -27,8 +27,12 @@ void free_graph(graph_t *graph) {
     free(graph);
 }
 
-void parse_input(graph_t *graph, char *filename) {
-
+graph_t *parse_input(char *filename) {
+    graph_t *graph = malloc(sizeof(graph_t));
+    if (graph == NULL) {
+        printf("Malloc failed.\n");
+        exit(EXIT_FAILURE);
+    }
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         if (errno == ENOENT) {
@@ -79,6 +83,7 @@ void parse_input(graph_t *graph, char *filename) {
         }
     }
     fclose(file);
+    return graph;
 }
 
 
@@ -128,7 +133,7 @@ int get_arg(int argc, char *argv[], char *flags) {
     return -1;
 }
 
-char *parse_cmd(int argc, char **argv, graph_t *graph) {
+char *parse_cmd(int argc, char **argv, long *start_node_id, long *end_node_id) {
 
     // VARIABLES
 
@@ -171,7 +176,7 @@ char *parse_cmd(int argc, char **argv, graph_t *graph) {
                 if (value < 0) {
                     error_exit("parse_cmd(): Start node ID must be positive");
                 }
-                graph->start_node_id = value;
+                *start_node_id = value;
                 start_node_set = true;
                 break;
             case 'e':
@@ -185,7 +190,7 @@ char *parse_cmd(int argc, char **argv, graph_t *graph) {
                 if (value < 0) {
                     error_exit("parse_cmd(): End node ID must be positive");
                 }
-                graph->end_node_id = value;
+                *end_node_id = value;
                 end_node_set = true;
                 break;
             case 'f':
@@ -204,70 +209,56 @@ char *parse_cmd(int argc, char **argv, graph_t *graph) {
                 error_exit("parse_cmd(): Wrong argument");
         }
     }
-    printf("Start node ID: %ld\n", graph->start_node_id);
-    printf("End node ID: %ld\n", graph->end_node_id);
+    printf("Start node ID: %ld\n", *start_node_id);
+    printf("End node ID: %ld\n", *end_node_id);
     printf("File: %s\n", filename);
     return filename;
 }
 
-
-/*char *parse_cmd(int argc, char **argv) {
-    if (argc < 2) {
-        error_exit("No arguments provided.");
+path_set_t *find_paths(graph_t *graph, long start, long end) {
+    path_set_t *path_set = malloc(sizeof(path_set_t));
+    if (path_set == NULL) {
+        error_exit("find_paths(): Malloc failed");
     }
-    if (argc > 2) {
-        error_exit("Too many arguments provided.");
-    }
-    if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
-        printf(HELP);
-        exit(EXIT_SUCCESS);
-    }
-    return argv[1];
-}*/
-
-pathset_t *find_paths(graph_t *graph, long start, long end) {
-    pathset_t *pathset = malloc(sizeof(pathset_t));
-    if (pathset == NULL) {
-        printf("Malloc failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    pathset->path_count = 0;
-    pathset->paths = NULL;
+    path_set->path_count = 0;
+    path_set->paths = NULL;
     find_paths_from_point(graph, start, end, NULL);
-    return pathset;
+    return path_set;
 }
 
 void find_paths_from_point(graph_t *graph, long start, long end,
                            graph_t *path) {
+    node_t *tmp_ptr;
+    bool explore;
+
     //printf("%d\n",start);
     if (path == NULL) {
         path = malloc(sizeof(graph_t));
         if (path == NULL) {
-            printf("Malloc failed.\n");
-            exit(EXIT_FAILURE);
+            error_exit("find_paths_from_point(): Malloc failed");
         }
         path->nodes = NULL;
         path->nodes_count = 0;
     }
     //printf("realloc\n");
-    path->nodes = realloc(path->nodes, sizeof(node_t) * (path->nodes_count + 1));
-    if (path->nodes == NULL) {
-        printf("Malloc failed.\n");
-        exit(EXIT_FAILURE);
+    tmp_ptr = realloc(path->nodes, sizeof(node_t) * (path->nodes_count + 1));
+    if (tmp_ptr == NULL) {
+        error_exit("find_paths_from_point(): Realloc failed");
     }
+    path->nodes = tmp_ptr;
     //printf("add to path\n");
     path->nodes[path->nodes_count] = graph->nodes[start];
     path->nodes_count++;
 
-    if (start == end) {
+    if (start == end && path->nodes_count == graph->nodes_count) {
         print_path(path);
     } else {
         for (int i = 0; i < graph->nodes[start].degree; i++) {
             //printf("next: %d\n",graph->nodes[start].neighbours[i]);
-            bool explore = true;
+            explore = true;
             for (int j = 0; j < path->nodes_count; j++) {
                 //printf("path node %d: %d\n",j,path->nodes[j].id);
-                if (graph->nodes[start].neighbours[i] == path->nodes[j].id) {
+                if ( graph->nodes[start].neighbours[i] == path->nodes[j].id) {
                     explore = false;
                     break;
                 }
@@ -275,13 +266,11 @@ void find_paths_from_point(graph_t *graph, long start, long end,
             if (explore) {
                 graph_t *path2 = malloc(sizeof(graph_t));
                 if (path2 == NULL) {
-                    printf("Malloc failed.\n");
-                    exit(EXIT_FAILURE);
+                    error_exit("find_paths_from_point(): Malloc failed");
                 }
                 path2->nodes = malloc(sizeof(node_t) * path->nodes_count);
                 if (path2->nodes == NULL) {
-                    printf("Malloc failed.\n");
-                    exit(EXIT_FAILURE);
+                    error_exit("find_paths_from_point(): Malloc failed");
                 }
                 memcpy(path2->nodes, path->nodes, sizeof(node_t) * path->nodes_count);
                 path2->nodes_count = path->nodes_count;
@@ -294,21 +283,19 @@ void find_paths_from_point(graph_t *graph, long start, long end,
 int main(int argc, char **argv) {
     // declarations
     char filename[MAX_BUF];
-    graph_t *graph = malloc(sizeof(graph_t));
-    if (graph == NULL) {
-        printf("Malloc failed.\n");
-        exit(EXIT_FAILURE);
-    }
+    long start_node_id;
+    long end_node_id;
+    graph_t *graph;
 
     // parse command line arguments
-    strcpy(filename, parse_cmd(argc, argv, graph));
+    strcpy(filename, parse_cmd(argc, argv, &start_node_id, &end_node_id));
 
     // parse file
-    parse_input(graph, filename);
+    graph = parse_input(filename);
 
     print_graph_nodes(graph);
 
-    pathset_t *ps = find_paths(graph, graph->start_node_id, graph->end_node_id);
+    path_set_t *ps = find_paths(graph, start_node_id, end_node_id);
     //for(int i =0;i<ps->path_count;i++)print_graph_nodes(ps->paths);
 
     free(ps);

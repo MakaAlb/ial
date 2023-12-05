@@ -65,14 +65,12 @@ typedef struct node_t {
 typedef struct graph_t {
     int nodes_count;
     node_t *nodes;
-    long start_node_id;
-    long end_node_id;
 } graph_t;
 
-typedef struct pathset_t {
+typedef struct path_set_t {
     int path_count;
   graph_t **paths;
-} pathset_t;
+} path_set_t;
 
 
 
@@ -93,7 +91,7 @@ void error_exit(char *message);
  *
  * @return filename - name of the file with the graph
  */
-char *parse_cmd(int argc, char **argv, graph_t *graph);
+char *parse_cmd(int argc, char **argv, long *start_node_id, long *end_node_id);
 
 /**
  * @brief Parses the input file and creates a graph
@@ -101,7 +99,7 @@ char *parse_cmd(int argc, char **argv, graph_t *graph);
  * @param graph - graph structure to be filled
  * @param filename - name of the file with the graph
  */
-void parse_input(graph_t *graph, char *filename);
+graph_t *parse_input(char *filename);
 
 /**
  * @brief Prints nodes of the graph with their information
@@ -117,7 +115,7 @@ void print_graph_nodes(graph_t *graph);
  */
 void free_graph(graph_t *graph);
 
-void free_pathset(pathset_t *pathset);
+void free_pathset(path_set_t *pathset);
 
 void print_path(graph_t* path);
 
@@ -130,7 +128,7 @@ void print_path(graph_t* path);
  *
  */
 
-pathset_t *find_paths(graph_t *graph, long start, long end);
+path_set_t *find_paths(graph_t *graph, long start, long end);
 
 /**
  * @brief finds all Hamiltonian path from vertex start to end vertex
