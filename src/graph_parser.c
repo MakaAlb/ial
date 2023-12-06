@@ -102,7 +102,7 @@ void print_graph_nodes(graph_t *graph) {
 
 void print_path(graph_t *path) {
     for (int i = 0; i < path->nodes_count; i++) {
-        printf("%d ", path->nodes[i].id);
+        printf(" %d", path->nodes[i].id);
     }
     printf("\n");
 }

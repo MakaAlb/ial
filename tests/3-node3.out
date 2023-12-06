@@ -1,4 +1,4 @@
-./hamiltonian_algorithm -f 3-node3.in  -s 1 -e 2
+./hamiltonian_algorithm -f 3-node3.in -s 1 -e 2
 1 0 2
 
-./hamiltonian_algorithm -f 3-node3.in  -s 0 -e 0
+./hamiltonian_algorithm -f 3-node3.in -s 0 -e 0

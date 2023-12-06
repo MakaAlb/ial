@@ -1,4 +1,4 @@
-./hamiltonian_algorithm -f 6-node5.in  -s 5 -e 3
+./hamiltonian_algorithm -f 6-node5.in -s 5 -e 3
 5 2 1 0 4 3
 
-./hamiltonian_algorithm -f 6-node5.in  -s 0 -e 0
+./hamiltonian_algorithm -f 6-node5.in -s 0 -e 0

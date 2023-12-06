@@ -1,6 +1,13 @@
-./hamiltonian_algorithm -f 3-node1.in  -s 0 -e 1
+./hamiltonian_algorithm -f 3-node1.in -s 0 -e 1
 0 2 1
 
-./hamiltonian_algorithm -f 3-node1.in  -s 0 -e 0
+./hamiltonian_algorithm -f 3-node1.in -s 0 -e 0
 0 1 2 0
 0 2 1 0
+
+./hamiltonian_algorithm -f 3-node1.txt -s 0 -e 1
+ 0 2 1
+
+./hamiltonian_algorithm -f 3-node1.txt -s 0 -e 0
+ 0 1 2 0
+ 0 2 1 0

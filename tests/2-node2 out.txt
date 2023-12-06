@@ -1,0 +1,4 @@
+./hamiltonian_algorithm -f 2-node2.txt  -s 0 -e 1
+
+
+./hamiltonian_algorithm -f 2-node2.txt  -s 0 -e 0
