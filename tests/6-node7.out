@@ -1,0 +1,5 @@
+./hamiltonian_algorithm -f 6-node7.in  -s 3 -e 1
+3 4 2 5 0 1
+3 0 5 2 4 1
+
+./hamiltonian_algorithm -f 6-node7.in  -s 0 -e 0

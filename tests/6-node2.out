@@ -1,0 +1,6 @@
+./hamiltonian_algorithm -f 6-node2.in  -s 5 -e 2
+5 4 3 0 1 2
+
+./hamiltonian_algorithm -f 6-node2.in  -s 1 -e 1
+1 0 3 4 5 2 1
+1 2 5 4 3 0 1
