@@ -1,3 +1,3 @@
-./hamiltonian_algorithm -f 3-node5.txt  -s 0 -e 1
+./hamiltonian_algorithm -f 3-node5.in  -s 0 -e 1
 
-./hamiltonian_algorithm -f 3-node5.txt  -s 0 -e 0
+./hamiltonian_algorithm -f 3-node5.in  -s 0 -e 0

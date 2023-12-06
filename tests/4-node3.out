@@ -1,4 +1,4 @@
-./hamiltonian_algorithm -f 4-node3.txt  -s 0 -e 2
+./hamiltonian_algorithm -f 4-node3.in  -s 0 -e 2
 0 3 1 2
 
-./hamiltonian_algorithm -f 4-node3.txt  -s 3 -e 3
+./hamiltonian_algorithm -f 4-node3.in  -s 3 -e 3
