@@ -35,7 +35,7 @@
 #define MAX_NODES 100
 
 // help message
-#define HELP "\nUSAGE: ./hamiltonian_algo -f filename -s start_node_id -e end_node_id\n\n" \
+#define HELP "\nUSAGE: ./hamiltonian_algorithm -f filename -s start_node_id -e end_node_id\n\n" \
                 "\tfilename\tName of the file with the graph.\n"                           \
                 "\tstart_node_id\tID of the starting node.\n"                              \
                 "\tend_node_id\tID of the end node.\n\n"
