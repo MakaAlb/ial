@@ -20,6 +20,7 @@
 #include <stdbool.h>
 
 
+
 // DEFINES
 
 // color red for error messages
@@ -36,8 +37,8 @@
 
 // help message
 #define HELP "\nUSAGE: ./hamiltonian_algorithm -f filename -s start_node_id -e end_node_id\n\n" \
-                "\tfilename\tName of the file with the graph.\n"                           \
-                "\tstart_node_id\tID of the starting node.\n"                              \
+                "\tfilename\tName of the file with the graph.\n"                                \
+                "\tstart_node_id\tID of the starting node.\n"                                   \
                 "\tend_node_id\tID of the end node.\n\n"
 
 
@@ -67,6 +68,12 @@ typedef struct graph_t {
     node_t *nodes;
 } graph_t;
 
+/**
+ * @brief Structure representing a set of paths
+ *
+ * @param path_count - number of paths in the set
+ * @param paths - array of paths
+ */
 typedef struct path_set_t {
     int path_count;
   graph_t **paths;
@@ -88,6 +95,8 @@ void error_exit(char *message);
  *
  * @param argc - number of arguments
  * @param argv - array of arguments
+ * @param start_node_id - pointer to the variable where the start node ID will be stored
+ * @param end_node_id - pointer to the variable where the end node ID will be stored
  *
  * @return filename - name of the file with the graph
  */
@@ -96,7 +105,6 @@ char *parse_cmd(int argc, char **argv, long *start_node_id, long *end_node_id);
 /**
  * @brief Parses the input file and creates a graph
  *
- * @param graph - graph structure to be filled
  * @param filename - name of the file with the graph
  */
 graph_t *parse_input(char *filename);
@@ -115,8 +123,11 @@ void print_graph_nodes(graph_t *graph);
  */
 void free_graph(graph_t *graph);
 
-void free_pathset(path_set_t *pathset);
-
+/**
+ * @brief Prints the path
+ *
+ * @param path - path to be printed
+ */
 void print_path(graph_t* path);
 
 /**
@@ -127,7 +138,6 @@ void print_path(graph_t* path);
  * @param end - end node
  *
  */
-
 path_set_t *find_paths(graph_t *graph, long start, long end);
 
 /**
@@ -137,10 +147,8 @@ path_set_t *find_paths(graph_t *graph, long start, long end);
  * @param start - starting node
  * @param end - end node
  * @param path - already searched path, NULL if first level of iteration
- * @param pathset - if path is found will contain all found paths
  *
  */
-void find_paths_from_point(graph_t *graph, long start, long end,
-                           graph_t *path);
+void find_paths_from_point(graph_t *graph, long start, long end, graph_t *path);
 
 #endif //IAL_GRAPH_PARSER_H

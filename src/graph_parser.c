@@ -101,8 +101,6 @@ void print_graph_nodes(graph_t *graph) {
 }
 
 void print_path(graph_t *path) {
-    printf("Nodes count: %d\n", path->nodes_count);
-    printf("\t");
     for (int i = 0; i < path->nodes_count; i++) {
         printf("%d ", path->nodes[i].id);
     }
@@ -209,9 +207,6 @@ char *parse_cmd(int argc, char **argv, long *start_node_id, long *end_node_id) {
                 error_exit("parse_cmd(): Wrong argument");
         }
     }
-    printf("Start node ID: %ld\n", *start_node_id);
-    printf("End node ID: %ld\n", *end_node_id);
-    printf("File: %s\n", filename);
     return filename;
 }
 
@@ -231,7 +226,6 @@ void find_paths_from_point(graph_t *graph, long start, long end,
     node_t *tmp_ptr;
     bool explore;
 
-    //printf("%d\n",start);
     if (path == NULL) {
         path = malloc(sizeof(graph_t));
         if (path == NULL) {
@@ -240,13 +234,11 @@ void find_paths_from_point(graph_t *graph, long start, long end,
         path->nodes = NULL;
         path->nodes_count = 0;
     }
-    //printf("realloc\n");
     tmp_ptr = realloc(path->nodes, sizeof(node_t) * (path->nodes_count + 1));
     if (tmp_ptr == NULL) {
         error_exit("find_paths_from_point(): Realloc failed");
     }
     path->nodes = tmp_ptr;
-    //printf("add to path\n");
     path->nodes[path->nodes_count] = graph->nodes[start];
     path->nodes_count++;
 
@@ -261,14 +253,12 @@ void find_paths_from_point(graph_t *graph, long start, long end,
             free(path->nodes);
             free(path);
             return;
-        } //visited start prematurly
+        }
     }
 
     for (int i = 0; i < graph->nodes[start].degree; i++) {
-        //printf("next: %d\n",graph->nodes[start].neighbours[i]);
         explore = true;
         for (int j = 0; j < path->nodes_count; j++) {
-            //printf("path node %d: %d\n",j,path->nodes[j].id);
             if (graph->nodes[start].neighbours[i] == path->nodes[j].id
                 && graph->nodes[start].neighbours[i] != end) {
                 explore = false;
@@ -299,8 +289,7 @@ int main(int argc, char **argv) {
     long start_node_id;
     long end_node_id;
     graph_t *graph;
-
-
+    
     // parse command line arguments
     filename = parse_cmd(argc, argv, &start_node_id, &end_node_id);
 
@@ -308,7 +297,6 @@ int main(int argc, char **argv) {
     graph = parse_input(filename);
 
     path_set_t *ps = find_paths(graph, start_node_id, end_node_id);
-
 
     // free memory
     free(ps);
