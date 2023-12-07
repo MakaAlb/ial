@@ -1,5 +1,5 @@
 ./hamiltonian_algorithm -f 2-node1.in -s 0 -e 1
-0 1
+ 0 1
 
 ./hamiltonian_algorithm -f 2-node1.in -s 0 -e 0
-0 1 0
+ 0 1 0

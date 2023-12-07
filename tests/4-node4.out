@@ -1,4 +1,4 @@
 ./hamiltonian_algorithm -f 4-node4.in -s 2 -e 3
-2 1 0 3
+ 2 1 0 3
 
 ./hamiltonian_algorithm -f 4-node4.in -s 0 -e 0

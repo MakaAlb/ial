@@ -63,7 +63,7 @@ def main():
     success = 0
     for case in cases:
         print(f"Running test case: {case}")
-        outfile = open(f"{case} out.txt", "r")
+        outfile = open(f"{case}.out", "r")
         success += test_case(case, outfile)
         success += test_case(case, outfile)
         outfile.close()
